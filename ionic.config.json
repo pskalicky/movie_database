@@ -1,0 +1,7 @@
+{
+  "name": "movie_database",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
