@@ -49,6 +49,11 @@ getGenres(): Observable<any> {
     return this.http.get<ApiResult>(url);
   }
 
+searchMovies(query: string, page = 1): Observable<ApiResult> {
+    return this.http.get<ApiResult>(
+      `${environment.baseUrl}/search/movie?api_key=${environment.apiKey}&query=${query}&page=${page}&language=cs-CZ`
+    );
+  }
 
 getMovieDetails(id: string) {
     return this.http.get<any>(

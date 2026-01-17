@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from 'src/app/services/movie'; 
+import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { calendar, time, arrowBack, star, starOutline } from 'ionicons/icons'; 
 
@@ -24,7 +25,8 @@ export class MovieDetailPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private navCtrl: NavController
   ) {
     addIcons({ calendar, time, arrowBack, star, starOutline});
   }
@@ -32,6 +34,11 @@ export class MovieDetailPage implements OnInit {
     this.myRating = score;
     console.log('Uživatel hodnotil:', score);
   }
+
+  goBack() {
+    this.navCtrl.back();
+  }
+
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
