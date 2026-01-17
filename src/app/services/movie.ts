@@ -22,6 +22,11 @@ export class MovieService {
       `${environment.baseUrl}/movie/popular?api_key=${environment.apiKey}&page=${page}`
     );
   }
+  getPopularTvShows(page = 1) {
+    return this.http.get<ApiResult>(
+      `${environment.baseUrl}/tv/popular?api_key=${environment.apiKey}&page=${page}&language=cs-CZ`
+    );
+  }
 
   getTopRatedMovies(page = 1): Observable<ApiResult> {
     return this.http.get<ApiResult>(
