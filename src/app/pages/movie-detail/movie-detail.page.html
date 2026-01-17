@@ -21,20 +21,33 @@
     <div class="ion-padding content-wrapper">
       
       <h1 class="movie-title">{{ movie.title }}</h1>
-      
+
       <div class="meta-tags">
         <ion-chip color="primary" mode="ios" outline="true">
           <ion-icon name="calendar"></ion-icon>
-          <ion-label>{{ movie.release_date | date:'yyyy' }}</ion-label>
+          <ion-label>{{ movie.release_date | date:'d. M. yyyy' }}</ion-label>
         </ion-chip>
 
         <ion-chip color="warning" mode="ios" outline="true">
           <ion-icon name="time"></ion-icon>
           <ion-label>{{ movie.runtime }} min</ion-label>
         </ion-chip>
+      </div> <p class="tagline" *ngIf="movie.tagline">"{{ movie.tagline }}"</p>
+      
+      <div class="providers-section" *ngIf="streamProviders.length > 0">
+        <h3 class="section-title">Kde sledovat online</h3>
+      <div class="providers-list">
+      <div *ngFor="let provider of streamProviders" class="provider-item">
+        <div class="provider-logo">
+          <img [src]="'https://image.tmdb.org/t/p/original' + provider.logo_path" [alt]="provider.provider_name">
+        </div>
+        <span class="provider-name">{{ provider.provider_name }}</span>
       </div>
+    </div>
+    
+    <p class="attribution">Powered by JustWatch</p>
+  </div>
 
-      <p class="tagline" *ngIf="movie.tagline">"{{ movie.tagline }}"</p>
 
       <div class="rating-section">
         <h3>Tvé hodnocení</h3>

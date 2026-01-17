@@ -55,6 +55,12 @@ searchMovies(query: string, page = 1): Observable<ApiResult> {
     );
   }
 
+  getMovieProviders(id: string) {
+    return this.http.get<any>(
+      `${environment.baseUrl}/movie/${id}/watch/providers?api_key=${environment.apiKey}`
+    );
+  }
+
 getMovieDetails(id: string) {
     return this.http.get<any>(
       `${environment.baseUrl}/movie/${id}?api_key=${environment.apiKey}&language=cs-CZ&append_to_response=credits`

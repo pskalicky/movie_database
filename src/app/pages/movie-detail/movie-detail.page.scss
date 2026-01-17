@@ -1,3 +1,4 @@
+/* 1. Průhledný Header */
 ion-toolbar {
   --background: transparent;
   --border-color: transparent;
@@ -8,12 +9,11 @@ ion-toolbar {
   z-index: 10;
 }
 
+/* 2. Plakát na pozadí (fixní pozice pro parallax efekt) */
 .poster-container {
   width: 100%;
   height: 55vh; 
-  position: relative;
-  
-  position: fixed; 
+  position: fixed; /* Důležité: fixed, aby se obsah scrolloval přes něj */
   top: 0;
   z-index: 0;
 
@@ -24,7 +24,7 @@ ion-toolbar {
     object-position: center top; 
   }
 
- 
+  /* Ztmavovací vrstva přes plakát */
   &::after {
     content: '';
     position: absolute;
@@ -32,34 +32,32 @@ ion-toolbar {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.2); 
+    background: rgba(0, 0, 0, 0.3); /* Trochu jsem ztmavil pro lepší čitelnost ikon */
   }
 }
 
-
+/* 3. Hlavní obsahová karta (vyjíždí přes plakát) */
 .content-wrapper {
   position: relative; 
-  z-index: 5;
+  z-index: 5; /* Musí být vyšší než plakát */
   
-
-  margin-top: 50vh; 
-  border-radius: 30px 30px 0 0; 
+  margin-top: 50vh; /* Posun dolů, aby byl vidět plakát */
+  border-radius: 30px 30px 0 0; /* Zaoblení horních rohů */
   background: var(--ion-background-color); 
   
   padding: 24px;
   padding-bottom: 80px; 
-  min-height: 50vh; 
+  min-height: 100vh; /* Aby to pokrylo celou obrazovku při scrollu */
   box-shadow: 0px -5px 20px rgba(0,0,0,0.1); 
 }
 
-
+/* 4. Typografie a informace o filmu */
 .movie-title {
   font-size: 2rem;
   font-weight: 800;
   margin-top: 0;
   margin-bottom: 10px;
   line-height: 1.1;
-
 }
 
 .tagline {
@@ -84,6 +82,7 @@ ion-toolbar {
   margin-bottom: 30px;
 }
 
+/* 5. Sekce Hodnocení */
 .rating-section {
   background: var(--ion-color-light);
   padding: 15px;
@@ -91,6 +90,7 @@ ion-toolbar {
   text-align: center;
   margin: 20px 0;
 }
+
 .stars {
   display: flex;
   justify-content: center;
@@ -98,14 +98,23 @@ ion-toolbar {
   margin-top: 5px;
 }
 
+/* 6. Společné styly pro nadpisy sekcí */
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  margin-top: 30px;
+  display: block;
+}
 
+/* 7. Sekce HERCI (Cast) */
 .cast-scroller {
   display: flex;
   overflow-x: auto;
   gap: 16px;
   padding: 10px 0 20px 0;
-  scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 }
 
 .cast-card {
@@ -123,7 +132,12 @@ ion-toolbar {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     
     img { width: 100%; height: 100%; object-fit: cover; }
-    .no-photo { line-height: 80px; font-size: 1.5rem; color: var(--ion-color-medium); }
+    
+    .no-photo { 
+      line-height: 80px; 
+      font-size: 1.5rem; 
+      color: var(--ion-color-medium); 
+    }
   }
 
   .actor-name {
@@ -134,6 +148,7 @@ ion-toolbar {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  
   .character-name {
     font-size: 0.65rem;
     color: var(--ion-color-medium);
@@ -142,4 +157,4 @@ ion-toolbar {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-}
+} 

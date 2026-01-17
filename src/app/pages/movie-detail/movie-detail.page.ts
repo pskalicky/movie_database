@@ -19,7 +19,7 @@ export class MovieDetailPage implements OnInit {
 
   movie: any = null;
   imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
-
+  streamProviders: any[] = [];
   myRating = 0;
   stars = [1, 2, 3, 4, 5];
 
@@ -42,12 +42,27 @@ export class MovieDetailPage implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
-    
+
+    if (id) {
+      this.loadProviders(id);
+    }
+
     if (id) {
       this.movieService.getMovieDetails(id).subscribe((res) => {
         console.log('Načtený detail:', res);
         this.movie = res;
       });
     }
+  }
+
+  loadProviders(id: string) {
+    this.movieService.getMovieProviders(id).subscribe(res => {
+      const czData = res.results['CZ'];
+      if (czData && czData.flatrate) {
+        this.streamProviders = czData.flatrate;
+      } else {
+        this.streamProviders = [];
+      }
+    });
   }
 }
