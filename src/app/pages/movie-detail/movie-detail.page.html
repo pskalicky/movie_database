@@ -1,0 +1,79 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" color="light"></ion-back-button>
+    </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content [fullscreen]="true">
+  
+  <div *ngIf="!movie" class="ion-text-center ion-padding top-spacing">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  <div *ngIf="movie">
+    
+    <div class="poster-container">
+      <img [src]="imageBaseUrl + movie.poster_path" alt="Poster">
+      <div class="gradient-overlay"></div>
+    </div>
+
+    <div class="ion-padding content-wrapper">
+      
+      <h1 class="movie-title">{{ movie.title }}</h1>
+      
+      <div class="meta-tags">
+        <ion-chip color="primary" mode="ios" outline="true">
+          <ion-icon name="calendar"></ion-icon>
+          <ion-label>{{ movie.release_date | date:'yyyy' }}</ion-label>
+        </ion-chip>
+
+        <ion-chip color="warning" mode="ios" outline="true">
+          <ion-icon name="time"></ion-icon>
+          <ion-label>{{ movie.runtime }} min</ion-label>
+        </ion-chip>
+      </div>
+
+      <p class="tagline" *ngIf="movie.tagline">"{{ movie.tagline }}"</p>
+
+      <div class="rating-section">
+        <h3>Tvé hodnocení</h3>
+        <div class="stars">
+          <ion-icon 
+            *ngFor="let star of stars" 
+            [name]="star <= myRating ? 'star' : 'star-outline'" 
+            [color]="star <= myRating ? 'warning' : 'medium'"
+            size="large"
+            (click)="rateMovie(star)"
+          ></ion-icon>
+        </div>
+        <p class="rating-text" *ngIf="myRating > 0">Dal jsi {{ myRating }}/5 hvězd!</p>
+      </div>
+
+      <hr class="divider">
+
+      <h3>Příběh</h3>
+      <p class="overview">{{ movie.overview }}</p>
+
+      <h3 *ngIf="movie.credits?.cast?.length > 0">Hrají</h3>
+      
+      <div class="cast-scroller">
+        <div class="cast-card" *ngFor="let actor of movie.credits.cast | slice:0:10">
+          <div class="actor-img">
+             <img *ngIf="$any(actor).profile_path" [src]="imageBaseUrl + $any(actor).profile_path">
+             <div *ngIf="!$any(actor).profile_path" class="no-photo">?</div>
+          </div>
+          <p class="actor-name">{{ $any(actor).name }}</p>
+          <p class="character-name">{{ $any(actor).character }}</p>
+        </div>
+      </div>
+
+      <div class="genres">
+        <ion-badge *ngFor="let genre of movie.genres" color="light">
+          {{ genre.name }}
+        </ion-badge>
+      </div>
+      
+    </div>
+  </div>
+</ion-content>

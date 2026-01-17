@@ -50,9 +50,9 @@ getGenres(): Observable<any> {
   }
 
 
-  getMovieDetails(id: string) {
-    return this.http.get(
-      `${environment.baseUrl}/movie/${id}?api_key=${environment.apiKey}`
+getMovieDetails(id: string) {
+    return this.http.get<any>(
+      `${environment.baseUrl}/movie/${id}?api_key=${environment.apiKey}&language=cs-CZ&append_to_response=credits`
     );
   }
 }
