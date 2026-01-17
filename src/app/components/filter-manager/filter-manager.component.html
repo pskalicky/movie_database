@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Spravovat filtry</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Hotovo</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <ion-list>
+    <ion-reorder-group [disabled]="false" (ionItemReorder)="handleReorder($event)">
+
+      <ion-item-sliding *ngFor="let filter of filters">
+
+        <ion-item>
+          <ion-label>
+            <h2>{{ filter.label }}</h2>
+            <p *ngIf="filter.type === 'predefined'">Výchozí filtr</p>
+            <p *ngIf="filter.type === 'custom'">Vlastní filtr</p>
+          </ion-label>
+          
+          <ion-reorder slot="end"></ion-reorder>
+        </ion-item>
+
+        <ion-item-options side="end">
+          
+          <ion-item-option color="primary" *ngIf="filter.type === 'custom'" (click)="editFilter(filter)">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-item-option>
+
+          <ion-item-option color="danger" *ngIf="filter.type === 'custom'" (click)="deleteFilter(filter.id)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+
+        </ion-item-options>
+
+      </ion-item-sliding>
+
+    </ion-reorder-group>
+  </ion-list>
+
+  <div class="ion-padding ion-text-center ion-text-medium">
+    <small>Chytni ikonu vpravo pro změnu pořadí.<br>Potažením doleva filtr upravíš nebo smažeš.</small>
+  </div>
+
+</ion-content>

@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ filter ? 'Upravit filtr' : 'Nový filtr' }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">Zrušit</ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="!filterName">Uložit</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  
+  <ion-list>
+    
+    <ion-item>
+      <ion-input 
+        label="Název filtru" 
+        labelPlacement="stacked" 
+        placeholder="Např. Horory 90s"
+        [(ngModel)]="filterName">
+      </ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-select label="Žánr" labelPlacement="stacked" placeholder="Vyber žánr" [(ngModel)]="selectedGenre">
+        <ion-select-option *ngFor="let g of genres" [value]="g.id">
+          {{ g.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-input 
+        label="Rok vydání" 
+        labelPlacement="stacked" 
+        type="number" 
+        placeholder="Např. 2023"
+        [(ngModel)]="selectedYear">
+      </ion-input>
+    </ion-item>
+
+  </ion-list>
+
+  <p class="ion-text-center ion-text-medium io-margin-top">
+    <small>Zvolte kritéria pro filtraci filmů.</small>
+  </p>
+
+</ion-content>

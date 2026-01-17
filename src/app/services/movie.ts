@@ -14,13 +14,41 @@ export interface ApiResult {
   providedIn: 'root'
 })
 export class MovieService {
+
   constructor(private http: HttpClient) { }
 
-  getTopRatedMovies(page = 1): Observable<ApiResult> {
+  getPopularMovies(page = 1): Observable<ApiResult> {
     return this.http.get<ApiResult>(
       `${environment.baseUrl}/movie/popular?api_key=${environment.apiKey}&page=${page}`
     );
   }
+
+  getTopRatedMovies(page = 1): Observable<ApiResult> {
+    return this.http.get<ApiResult>(
+      `${environment.baseUrl}/movie/top_rated?api_key=${environment.apiKey}&page=${page}`
+    );
+  }
+
+getGenres(): Observable<any> {
+    return this.http.get(
+      `${environment.baseUrl}/genre/movie/list?api_key=${environment.apiKey}&language=cs-CZ`
+    );
+  }
+
+
+  getMoviesByFilter(genreId?: number, year?: number, page = 1): Observable<ApiResult> {
+    let url = `${environment.baseUrl}/discover/movie?api_key=${environment.apiKey}&page=${page}&sort_by=popularity.desc`;
+    
+    if (genreId) {
+      url += `&with_genres=${genreId}`;
+    }
+    if (year) {
+      url += `&primary_release_year=${year}`;
+    }
+
+    return this.http.get<ApiResult>(url);
+  }
+
 
   getMovieDetails(id: string) {
     return this.http.get(

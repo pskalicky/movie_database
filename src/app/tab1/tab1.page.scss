@@ -37,3 +37,30 @@ ion-icon {
   font-size: 1rem;
 }
 
+/* Kontejner pro rozbalený obsah */
+.filters-wrapper {
+  background-color: var(--ion-color-light); /* Jemně odlišené pozadí */
+}
+
+/* Sekce tlačítek Nový/Spravovat */
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--ion-color-medium-shade);
+}
+
+/* Seznam samotných filtrů */
+.filter-list {
+  display: flex;
+  flex-wrap: wrap; /* TOTO je klíčové - čipy se zalamují na další řádek */
+  gap: 5px;
+}
+
+/* Úprava accordion headeru, aby byl menší */
+ion-accordion ion-item {
+  --min-height: 48px;
+  font-size: 0.9rem;
+}
+
