@@ -9,10 +9,11 @@ export class StorageService {
   private THEME_KEY = 'my_theme_preference';
   private FILTERS_KEY = 'my_movie_filters';
   private SESSION_KEY = 'my_tmdb_session';
+  private RATINGS_KEY = 'my_local_ratings';
 
   constructor() { }
 
-  // --- 1. MOTIV (Dark/Light) ---
+
   async saveTheme(mode: string) {
     await Preferences.set({
       key: this.THEME_KEY,
@@ -25,23 +26,23 @@ export class StorageService {
     return value;
   }
 
-  // --- 2. FILTRY (To je to, co ti chybělo) ---
+
   async saveFilters(filters: any[]) {
     await Preferences.set({
       key: this.FILTERS_KEY,
-      value: JSON.stringify(filters), // Ukládáme pole jako text
+      value: JSON.stringify(filters),
     });
   }
 
   async getFilters() {
     const { value } = await Preferences.get({ key: this.FILTERS_KEY });
     if (value) {
-      return JSON.parse(value); // Převedeme text zpět na pole
+      return JSON.parse(value); 
     }
     return null;
   }
 
-  // --- 3. SESSION (Přihlášení - pokud jsi implementoval) ---
+
   async saveSession(id: string) {
     await Preferences.set({ key: this.SESSION_KEY, value: id });
   }
@@ -54,4 +55,22 @@ export class StorageService {
   async removeSession() {
     await Preferences.remove({ key: this.SESSION_KEY });
   }
+
+  async getAllRatings() {
+    const { value } = await Preferences.get({ key: this.RATINGS_KEY });
+    if (value) {
+      return JSON.parse(value);
+    }
+    return {}; 
+  }
+
+  async saveRating(movieId: string, rating: number) {
+    const allRatings = await this.getAllRatings();
+    allRatings[movieId] = rating;
+    await Preferences.set({
+      key: this.RATINGS_KEY,
+      value: JSON.stringify(allRatings)
+    });
+  }
+
 }

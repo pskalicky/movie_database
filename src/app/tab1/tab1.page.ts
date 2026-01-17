@@ -8,6 +8,7 @@ import { addIcons } from 'ionicons';
 import { ModalController } from '@ionic/angular';
 import { FilterManagerComponent } from '../components/filter-manager/filter-manager.component';
 import { FilterEditorComponent } from '../components/filter-editor/filter-editor.component';
+import { ViewWillEnter } from '@ionic/angular';
 import { StorageService } from '../services/storage';
 import { star, videocam, add, close, options, settings } from 'ionicons/icons';
 
@@ -27,8 +28,9 @@ export interface MovieFilter {
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, RouterModule]
 })
-export class Tab1Page implements OnInit {
+export class Tab1Page implements OnInit, ViewWillEnter{
   
+  myRatings: any = {};
   movies: any[] = [];
   imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 
@@ -54,7 +56,11 @@ export class Tab1Page implements OnInit {
   saveState() {
     this.storageService.saveFilters(this.filters);
   }
-  // -----------------------------------
+  
+  async ionViewWillEnter() {
+    this.myRatings = await this.storageService.getAllRatings();
+    console.log('Moje hodnocení načtena:', this.myRatings);
+  }
 
   get activeFilterLabel(): string {
     const active = this.filters.find(f => f.isActive);

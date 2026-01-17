@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService } from 'src/app/services/movie'; 
 import { NavController } from '@ionic/angular';
+import { StorageService } from 'src/app/services/storage';
 import { addIcons } from 'ionicons';
 import { calendar, time, arrowBack, star, starOutline, albums } from 'ionicons/icons'; 
 
@@ -26,13 +27,17 @@ export class MovieDetailPage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private movieService: MovieService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private storageService: StorageService
   ) {
     addIcons({ calendar, time, arrowBack, star, starOutline, albums});
   }
-  rateMovie(score: number) {
-    this.myRating = score;
-    console.log('Uživatel hodnotil:', score);
+  
+  async rateMovie(stars: number) {
+    this.myRating = stars;
+    if (this.movie && this.movie.id) {
+      await this.storageService.saveRating(this.movie.id.toString(), stars);
+    }
   }
 
   goBack() {
@@ -40,12 +45,16 @@ export class MovieDetailPage implements OnInit {
   }
 
 
-  ngOnInit() {
+  async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     const type = this.route.snapshot.paramMap.get('type');
 
     if (id) {
       this.loadProviders(id);
+    }
+
+    if (id) {
+       this.loadMyRating(id);
     }
 
     if (id && type) {
@@ -77,5 +86,12 @@ export class MovieDetailPage implements OnInit {
         this.streamProviders = [];
       }
     });
+  }
+
+  async loadMyRating(id: string) {
+    const allRatings = await this.storageService.getAllRatings();
+    if (allRatings[id]) {
+      this.myRating = allRatings[id];
+    }
   }
 }
