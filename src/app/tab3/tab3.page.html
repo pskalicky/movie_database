@@ -1,17 +1,78 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+    <ion-title>Nastavení</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
+      <ion-title size="large">Nastavení</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+<ion-list-header>Vzhled</ion-list-header>
+  <ion-list inset="true">
+    <ion-item>
+      <ion-icon slot="start" name="contrast" color="primary"></ion-icon>
+      
+      <ion-select 
+        label="Motiv aplikace" 
+        interface="popover" 
+        justify="space-between"
+        [(ngModel)]="themeMode" 
+        (ionChange)="changeTheme($event)"
+
+      >
+        <ion-select-option value="auto">Auto</ion-select-option>
+        <ion-select-option value="dark">Tmavý</ion-select-option>
+        <ion-select-option value="light">Světlý</ion-select-option>
+      </ion-select>
+      
+    </ion-item>
+  </ion-list>
+
+  <ion-list-header>Připojení</ion-list-header>
+  <ion-list inset="true">
+    <ion-item>
+      <ion-icon slot="start" name="key" color="warning"></ion-icon>
+      <ion-input 
+        label="API Klíč" 
+        labelPlacement="stacked" 
+        placeholder="Vložte TMDB klíč"
+        [(ngModel)]="apiKey"
+      ></ion-input>
+    </ion-item>
+    
+    <ion-item button detail="true">
+      <ion-icon slot="start" name="globe" color="medium"></ion-icon>
+      <ion-label>Jazyk dat</ion-label>
+      <ion-note slot="end">Čeština</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <ion-list-header>O aplikaci</ion-list-header>
+  <ion-list inset="true">
+    <ion-item>
+      <ion-icon slot="start" name="information-circle" color="secondary"></ion-icon>
+      <ion-label>
+        <h2>MovieApp</h2>
+        <p>Verze 1.0.0</p>
+      </ion-label>
+    </ion-item>
+    <ion-item button detail="true" href="https://www.themoviedb.org/" target="_blank">
+      <ion-label>Zdroj dat (TMDB)</ion-label>
+    </ion-item>
+  </ion-list>
+
+  <div class="ion-padding ion-text-center">
+    <ion-button expand="block" color="danger" (click)="resetSettings()">
+      Resetovat nastavení
+    </ion-button>
+    <p class="ion-text-small ion-text-medium" style="margin-top: 15px;">
+      Vytvořeno jako školní projekt
+    </p>
+  </div>
+
 </ion-content>
