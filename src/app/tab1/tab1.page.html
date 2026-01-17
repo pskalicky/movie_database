@@ -49,7 +49,7 @@
       <ion-col size="6" size-md="4" size-lg="3" *ngFor="let movie of movies">
         <ion-card 
           button="true" 
-          [routerLink]="['/movie', movie.id]" 
+          [routerLink]="['/detail', 'movie', movie.id]"
           routerDirection="forward"
         >
           <img [src]="imageBaseUrl + movie.poster_path" alt="{{ movie.title }}" />

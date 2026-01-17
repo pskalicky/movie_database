@@ -29,7 +29,7 @@ export class MovieService {
     );
   }
 
-getGenres(): Observable<any> {
+  getGenres(): Observable<any> {
     return this.http.get(
       `${environment.baseUrl}/genre/movie/list?api_key=${environment.apiKey}&language=cs-CZ`
     );
@@ -49,9 +49,9 @@ getGenres(): Observable<any> {
     return this.http.get<ApiResult>(url);
   }
 
-searchMovies(query: string, page = 1): Observable<ApiResult> {
+  searchMovies(query: string, page = 1): Observable<ApiResult> {
     return this.http.get<ApiResult>(
-      `${environment.baseUrl}/search/movie?api_key=${environment.apiKey}&query=${query}&page=${page}&language=cs-CZ`
+      `${environment.baseUrl}/search/multi?api_key=${environment.apiKey}&query=${query}&page=${page}&language=cs-CZ`
     );
   }
 
@@ -61,9 +61,15 @@ searchMovies(query: string, page = 1): Observable<ApiResult> {
     );
   }
 
-getMovieDetails(id: string) {
+  getMovieDetails(id: string) {
     return this.http.get<any>(
       `${environment.baseUrl}/movie/${id}?api_key=${environment.apiKey}&language=cs-CZ&append_to_response=credits`
+    );
+  }
+
+  getTvDetails(id: string) {
+    return this.http.get<any>(
+    `${environment.baseUrl}/tv/${id}?api_key=${environment.apiKey}&language=cs-CZ&append_to_response=credits`
     );
   }
 }

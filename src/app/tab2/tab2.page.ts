@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router'; // Důležité pro proklik!
 import { MovieService } from '../services/movie';
 import { addIcons } from 'ionicons';
-import { search, star, sad } from 'ionicons/icons'; // Přidali jsme 'sad' pro prázdný stav
+import { search, star, sad, videocam, tv, person, imageOutline } from 'ionicons/icons'; // Přidali jsme 'sad' pro prázdný stav
 
 @Component({
   selector: 'app-tab2',
@@ -22,7 +22,7 @@ export class Tab2Page {
   hasSearched = false; // Abychom věděli, jestli uživatel už něco zkusil hledat
 
   constructor(private movieService: MovieService) {
-    addIcons({ search, star, sad });
+    addIcons({ search, star, sad, videocam, tv, person, imageOutline });
   }
 
   // Tato metoda se zavolá, když uživatel píše

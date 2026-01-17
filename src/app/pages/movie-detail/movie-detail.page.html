@@ -28,9 +28,17 @@
           <ion-label>{{ movie.release_date | date:'d. M. yyyy' }}</ion-label>
         </ion-chip>
 
-        <ion-chip color="warning" mode="ios" outline="true">
+        <ion-chip color="warning" mode="ios" outline="true" *ngIf="movie.runtime > 0">
           <ion-icon name="time"></ion-icon>
-          <ion-label>{{ movie.runtime }} min</ion-label>
+          <ion-label>
+            {{ movie.runtime }} min
+            <span *ngIf="movie.number_of_episodes"> / ep.</span>
+          </ion-label>
+        </ion-chip>
+        <ion-chip color="secondary" mode="ios" outline="true" *ngIf="movie.number_of_seasons">
+          <ion-icon name="albums"></ion-icon> <ion-label>
+            {{ movie.number_of_seasons }} Série | {{ movie.number_of_episodes }} Ep.
+          </ion-label>
         </ion-chip>
       </div> <p class="tagline" *ngIf="movie.tagline">"{{ movie.tagline }}"</p>
       

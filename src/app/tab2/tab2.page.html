@@ -20,24 +20,32 @@
 
   <ion-grid *ngIf="!isSearching && searchResults.length > 0">
     <ion-row>
-      <ion-col size="6" size-md="4" size-lg="3" *ngFor="let movie of searchResults">
+      <ion-col size="6" size-md="4" size-lg="3" *ngFor="let item of searchResults">
         
         <ion-card 
           button="true" 
-          [routerLink]="['/movie', movie.id]"
+          [routerLink]="['/detail', item.media_type === 'tv' ? 'tv' : 'movie', item.id]"
           routerDirection="forward"
         >
-          <div class="poster-placeholder" *ngIf="!movie.poster_path">
+          <div class="poster-placeholder" *ngIf="!item.poster_path && !item.profile_path">
             <ion-icon name="image-outline"></ion-icon>
           </div>
-          <img *ngIf="movie.poster_path" [src]="imageBaseUrl + movie.poster_path" />
+          
+          <img *ngIf="item.poster_path || item.profile_path" 
+               [src]="imageBaseUrl + (item.poster_path || item.profile_path)" />
 
           <ion-card-header>
             <ion-card-subtitle>
-              <ion-icon name="star" color="warning"></ion-icon>
-              {{ movie.vote_average | number: '1.1-1' }}
+              <ion-icon *ngIf="item.media_type === 'movie'" name="videocam"></ion-icon>
+              <ion-icon *ngIf="item.media_type === 'tv'" name="tv"></ion-icon>
+              <ion-icon *ngIf="item.media_type === 'person'" name="person"></ion-icon>
+              
+              <span *ngIf="item.vote_average">
+                {{ item.vote_average | number: '1.1-1' }}
+              </span>
             </ion-card-subtitle>
-            <ion-card-title>{{ movie.title }}</ion-card-title>
+            
+            <ion-card-title>{{ item.title || item.name }}</ion-card-title>
           </ion-card-header>
         </ion-card>
 

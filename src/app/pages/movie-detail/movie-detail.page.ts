@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MovieService } from 'src/app/services/movie'; 
 import { NavController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { calendar, time, arrowBack, star, starOutline } from 'ionicons/icons'; 
+import { calendar, time, arrowBack, star, starOutline, albums } from 'ionicons/icons'; 
 
 @Component({
   selector: 'app-movie-detail',
@@ -28,7 +28,7 @@ export class MovieDetailPage implements OnInit {
     private movieService: MovieService,
     private navCtrl: NavController
   ) {
-    addIcons({ calendar, time, arrowBack, star, starOutline});
+    addIcons({ calendar, time, arrowBack, star, starOutline, albums});
   }
   rateMovie(score: number) {
     this.myRating = score;
@@ -42,16 +42,29 @@ export class MovieDetailPage implements OnInit {
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
+    const type = this.route.snapshot.paramMap.get('type');
 
     if (id) {
       this.loadProviders(id);
     }
 
-    if (id) {
-      this.movieService.getMovieDetails(id).subscribe((res) => {
-        console.log('Načtený detail:', res);
-        this.movie = res;
-      });
+    if (id && type) {
+      if (type === 'movie') {
+        this.movieService.getMovieDetails(id).subscribe(res => {
+          this.movie = res;
+        });
+      } else if (type === 'tv') {
+        this.movieService.getTvDetails(id).subscribe(res => {
+          this.movie = res;
+          this.movie.title = res.name; 
+          this.movie.release_date = res.first_air_date;
+          if (res.episode_run_time && res.episode_run_time.length > 0) {
+            this.movie.runtime = res.episode_run_time[0];
+          } else {
+            this.movie.runtime = 0;
+          }
+        });
+      }
     }
   }
 
