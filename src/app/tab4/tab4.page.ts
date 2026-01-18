@@ -139,6 +139,7 @@ export class Tab4Page implements OnInit, ViewWillEnter{
          this.saveState();
       }
     }
+    this.loadTvShows();
   }
   loadTvShows(event?: any) {
     const activeFilter = this.filters.find(f => f.isActive);

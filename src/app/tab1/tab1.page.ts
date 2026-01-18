@@ -136,6 +136,7 @@ export class Tab1Page implements OnInit, ViewWillEnter{
          this.saveState();
       }
     }
+    this.loadMovies();
   }
 
 loadMovies(event?: any) {
