@@ -9,6 +9,7 @@ import { ModalController } from '@ionic/angular';
 import { FilterManagerComponent } from '../components/filter-manager/filter-manager.component';
 import { FilterEditorComponent } from '../components/filter-editor/filter-editor.component';
 import { ViewWillEnter } from '@ionic/angular';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { StorageService } from '../services/storage';
 import { star, videocam, add, close, options, settings, tv } from 'ionicons/icons';
 
@@ -33,6 +34,8 @@ export class Tab4Page implements OnInit, ViewWillEnter{
   myRatings: any = {};
   tvShows: any[] = [];
   imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  currentPage = 1;
+  totalPages = 1;
 
   filters: TvFilter[] = [
     { id: 'popular', label: '🔥 Trendy', isActive: true, type: 'predefined' }
@@ -96,7 +99,7 @@ export class Tab4Page implements OnInit, ViewWillEnter{
     const modal = await this.modalCtrl.create({
       component: FilterEditorComponent,
       componentProps: { 
-        isTv: true // Důležité! Řekneme editoru, ať načte TV žánry
+        isTv: true 
       } 
     });
 
@@ -133,23 +136,48 @@ export class Tab4Page implements OnInit, ViewWillEnter{
       }
     }
   }
-
-loadTvShows() {
+  loadTvShows(event?: any) {
     const activeFilter = this.filters.find(f => f.isActive);
-    this.tvShows = [];
-
-    if (!activeFilter) return;
-
-    // Logika volání API pro seriály
+    if (!activeFilter) {
+      if (event) event.target.complete();
+      return;
+    }
+    let apiCall;
     if (activeFilter.id === 'popular') {
-      this.movieService.getPopularTvShows().subscribe(res => this.tvShows = res.results);
+      apiCall = this.movieService.getPopularTvShows(this.currentPage);
     } else if (activeFilter.id === 'top_rated') {
-       this.movieService.getTopRatedTvShows().subscribe(res => this.tvShows = res.results);
+       apiCall = this.movieService.getTopRatedTvShows(this.currentPage);
     } else {
       const params = activeFilter.apiParams || {};
-      // Voláme novou metodu pro TV
-      this.movieService.getTvShowsByFilter(params.genre, params.year)
-        .subscribe(res => this.tvShows = res.results);
+      apiCall = this.movieService.getTvShowsByFilter(params.genre, params.year, this.currentPage);
     }
+
+    apiCall.subscribe({
+      next: (res: any) => {
+        this.totalPages = res.total_pages;
+
+        if (this.currentPage === 1) {
+          this.tvShows = res.results;
+        } else {
+          this.tvShows.push(...res.results);
+        }
+        if (event) {
+          event.target.complete();
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        if (event) event.target.complete();
+      }
+    });
+  }
+
+  loadMore(event: any) {
+    if (this.currentPage >= this.totalPages) {
+      event.target.disabled = true;
+      return;
+    }
+    this.currentPage++;
+    this.loadTvShows(event);
   }
 }
