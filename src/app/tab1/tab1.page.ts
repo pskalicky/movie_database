@@ -9,6 +9,7 @@ import { ModalController } from '@ionic/angular';
 import { FilterManagerComponent } from '../components/filter-manager/filter-manager.component';
 import { FilterEditorComponent } from '../components/filter-editor/filter-editor.component';
 import { ViewWillEnter } from '@ionic/angular';
+import { InfiniteScrollCustomEvent } from '@ionic/angular';
 import { StorageService } from '../services/storage';
 import { star, videocam, add, close, options, settings } from 'ionicons/icons';
 
@@ -33,6 +34,8 @@ export class Tab1Page implements OnInit, ViewWillEnter{
   myRatings: any = {};
   movies: any[] = [];
   imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  currentPage = 1;
+  totalPages = 1;
 
   filters: MovieFilter[] = [
     { id: 'popular', label: '🔥 Trendy', isActive: true, type: 'predefined' }
@@ -131,20 +134,47 @@ export class Tab1Page implements OnInit, ViewWillEnter{
     }
   }
 
-  loadMovies() {
+loadMovies(event?: any) {
     const activeFilter = this.filters.find(f => f.isActive);
-    this.movies = [];
-
-    if (!activeFilter) return;
-
+    if (!activeFilter) {
+      if (event) event.target.complete();
+      return;
+    }
+    let apiCall;
     if (activeFilter.id === 'popular') {
-      this.movieService.getPopularMovies().subscribe(res => this.movies = res.results);
+      apiCall = this.movieService.getPopularMovies(this.currentPage);
     } else if (activeFilter.id === 'top_rated') {
-       this.movieService.getTopRatedMovies().subscribe(res => this.movies = res.results);
+       apiCall = this.movieService.getTopRatedMovies(this.currentPage);
     } else {
       const params = activeFilter.apiParams || {};
-      this.movieService.getMoviesByFilter(params.genre, params.year)
-        .subscribe(res => this.movies = res.results);
+      apiCall = this.movieService.getMoviesByFilter(params.genre, params.year, this.currentPage);
     }
+    apiCall.subscribe({
+      next: (res: any) => {
+        this.totalPages = res.total_pages;
+
+        if (this.currentPage === 1) {
+          this.movies = res.results;
+        } else {
+          this.movies.push(...res.results);
+        }
+        if (event) {
+          event.target.complete();
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        if (event) event.target.complete();
+      }
+    });
+  }
+
+  loadMore(event: any) {
+    if (this.currentPage >= this.totalPages) {
+      event.target.disabled = true;
+      return;
+    }
+    this.currentPage++;
+    this.loadMovies(event);
   }
 }
