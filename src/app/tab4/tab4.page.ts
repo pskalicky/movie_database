@@ -76,6 +76,9 @@ export class Tab4Page implements OnInit, ViewWillEnter{
   selectFilter(selectedFilter: TvFilter) {
     this.filters.forEach(f => f.isActive = false);
     selectedFilter.isActive = true;
+    this.tvShows = [];
+    this.currentPage = 1;
+    this.totalPages = 1;
     this.loadTvShows();
     this.saveState();
   }
@@ -117,7 +120,8 @@ export class Tab4Page implements OnInit, ViewWillEnter{
     const modal = await this.modalCtrl.create({
       component: FilterManagerComponent,
       componentProps: {
-        filters: JSON.parse(JSON.stringify(this.filters)) 
+        filters: JSON.parse(JSON.stringify(this.filters)),
+        isTv: true
       }
     });
 

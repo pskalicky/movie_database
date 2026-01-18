@@ -55,7 +55,6 @@ export class MovieService {
 
   getTvShowsByFilter(genreId?: number, year?: number, page = 1): Observable<ApiResult> {
     let url = `${environment.baseUrl}/discover/tv?api_key=${environment.apiKey}&page=${page}&sort_by=popularity.desc&language=cs-CZ&include_null_first_air_dates=false`;
-    
     if (genreId) {
       url += `&with_genres=${genreId}`;
     }

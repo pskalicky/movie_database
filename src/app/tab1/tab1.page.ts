@@ -76,6 +76,10 @@ export class Tab1Page implements OnInit, ViewWillEnter{
   selectFilter(selectedFilter: MovieFilter) {
     this.filters.forEach(f => f.isActive = false);
     selectedFilter.isActive = true;
+    this.movies = [];
+    this.currentPage = 1;
+    this.totalPages = 1;
+
     this.loadMovies();
     this.saveState();
   }
