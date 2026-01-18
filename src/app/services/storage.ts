@@ -8,7 +8,8 @@ import { BehaviorSubject } from 'rxjs';
 export class StorageService {
 
   private THEME_KEY = 'my_theme_preference';
-  private FILTERS_KEY = 'my_movie_filters';
+  private FILTERS_KEY_MOVIE = 'my_movie_filters';
+  private FILTERS_KEY_TV = 'my_tv_filters';
   private SESSION_KEY = 'my_tmdb_session';
   private RATINGS_KEY = 'my_local_ratings';
   private ratingsSubject = new BehaviorSubject<any>({});
@@ -37,22 +38,24 @@ export class StorageService {
     return value;
   }
 
-
-  async saveFilters(filters: any[]) {
+  async saveFilters(filters: any[], type: 'movie' | 'tv' = 'movie') {
+    const key = type === 'tv' ? this.FILTERS_KEY_TV : this.FILTERS_KEY_MOVIE;
+    
     await Preferences.set({
-      key: this.FILTERS_KEY,
+      key: key,
       value: JSON.stringify(filters),
     });
   }
 
-  async getFilters() {
-    const { value } = await Preferences.get({ key: this.FILTERS_KEY });
+  async getFilters(type: 'movie' | 'tv' = 'movie') {
+    const key = type === 'tv' ? this.FILTERS_KEY_TV : this.FILTERS_KEY_MOVIE;
+
+    const { value } = await Preferences.get({ key: key });
     if (value) {
       return JSON.parse(value); 
     }
     return null;
   }
-
 
   async saveSession(id: string) {
     await Preferences.set({ key: this.SESSION_KEY, value: id });

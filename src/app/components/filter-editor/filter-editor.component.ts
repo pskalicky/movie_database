@@ -13,15 +13,13 @@ import { MovieService } from 'src/app/services/movie';
 })
 export class FilterEditorComponent implements OnInit {
 
-  // Pokud upravujeme, přijde nám sem existující filtr
   @Input() filter: any = null;
+  @Input() isTv: boolean = false;
 
-  // Data pro formulář
   filterName: string = '';
   selectedGenre: number | null = null;
   selectedYear: number | null = null;
 
-  // Seznam žánrů z API
   genres: any[] = [];
 
   constructor(
@@ -30,12 +28,16 @@ export class FilterEditorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // 1. Načíst žánry
-    this.movieService.getGenres().subscribe((res: any) => {
-      this.genres = res.genres;
-    });
+if (this.isTv) {
+      this.movieService.getTvGenres().subscribe((res: any) => {
+        this.genres = res.genres;
+      });
+    } else {
+      this.movieService.getGenres().subscribe((res: any) => {
+        this.genres = res.genres;
+      });
+    }
 
-    // 2. Pokud upravujeme existující, naplníme formulář
     if (this.filter) {
       this.filterName = this.filter.label;
       this.selectedGenre = this.filter.apiParams?.genre || null;
@@ -48,9 +50,8 @@ export class FilterEditorComponent implements OnInit {
   }
 
   save() {
-    // Vytvoříme objekt s výsledkem
     const result = {
-      id: this.filter ? this.filter.id : `custom_${Date.now()}`, // Zachovat ID nebo nové
+      id: this.filter ? this.filter.id : `custom_${Date.now()}`,
       label: this.filterName,
       isActive: true,
       type: 'custom',

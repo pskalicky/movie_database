@@ -47,7 +47,7 @@ export class Tab4Page implements OnInit, ViewWillEnter{
   }
 
   async ngOnInit() {
-    const savedFilters = await this.storageService.getFilters();
+    const savedFilters = await this.storageService.getFilters('tv');
     if (savedFilters && Array.isArray(savedFilters) && savedFilters.length > 0) {
       this.filters = savedFilters;
     }
@@ -57,7 +57,7 @@ export class Tab4Page implements OnInit, ViewWillEnter{
     this.loadTvShows();
   }
   saveState() {
-    this.storageService.saveFilters(this.filters);
+    this.storageService.saveFilters(this.filters, 'tv');
   }
   
   async ionViewWillEnter() {
@@ -94,7 +94,10 @@ export class Tab4Page implements OnInit, ViewWillEnter{
 
   async openAddFilterModal() {
     const modal = await this.modalCtrl.create({
-      component: FilterEditorComponent
+      component: FilterEditorComponent,
+      componentProps: { 
+        isTv: true // Důležité! Řekneme editoru, ať načte TV žánry
+      } 
     });
 
     await modal.present();
