@@ -40,7 +40,6 @@ export class MovieService {
     );
   }
 
-
   getMoviesByFilter(genreId?: number, year?: number, page = 1): Observable<ApiResult> {
     let url = `${environment.baseUrl}/discover/movie?api_key=${environment.apiKey}&page=${page}&sort_by=popularity.desc`;
     
@@ -54,7 +53,7 @@ export class MovieService {
     return this.http.get<ApiResult>(url);
   }
 
-  searchMovies(query: string, page = 1): Observable<ApiResult> {
+  searchMovies(query: string, page: number = 1): Observable<ApiResult> {
     return this.http.get<ApiResult>(
       `${environment.baseUrl}/search/multi?api_key=${environment.apiKey}&query=${query}&page=${page}&language=cs-CZ`
     );

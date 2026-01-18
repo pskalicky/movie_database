@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,19 @@ export class StorageService {
   private FILTERS_KEY = 'my_movie_filters';
   private SESSION_KEY = 'my_tmdb_session';
   private RATINGS_KEY = 'my_local_ratings';
+  private ratingsSubject = new BehaviorSubject<any>({});
+  public ratings$ = this.ratingsSubject.asObservable();
 
-  constructor() { }
+  constructor() { 
+    this.initRatings();
+  }
 
+  private async initRatings() {
+    const { value } = await Preferences.get({ key: this.RATINGS_KEY });
+    if (value) {
+      this.ratingsSubject.next(JSON.parse(value));
+    }
+  }
 
   async saveTheme(mode: string) {
     await Preferences.set({
@@ -57,19 +68,16 @@ export class StorageService {
   }
 
   async getAllRatings() {
-    const { value } = await Preferences.get({ key: this.RATINGS_KEY });
-    if (value) {
-      return JSON.parse(value);
-    }
-    return {}; 
+    return this.ratingsSubject.getValue();
   }
 
   async saveRating(movieId: string, rating: number) {
-    const allRatings = await this.getAllRatings();
-    allRatings[movieId] = rating;
+    const currentRatings = this.ratingsSubject.getValue();
+    currentRatings[movieId] = rating;
+    this.ratingsSubject.next(currentRatings);
     await Preferences.set({
       key: this.RATINGS_KEY,
-      value: JSON.stringify(allRatings)
+      value: JSON.stringify(currentRatings)
     });
   }
 

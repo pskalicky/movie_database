@@ -51,6 +51,9 @@ export class Tab1Page implements OnInit, ViewWillEnter{
     if (savedFilters && Array.isArray(savedFilters) && savedFilters.length > 0) {
       this.filters = savedFilters;
     }
+    this.storageService.ratings$.subscribe((ratings) => {
+      this.myRatings = ratings;
+    });
     this.loadMovies();
   }
   saveState() {

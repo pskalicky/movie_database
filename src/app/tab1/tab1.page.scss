@@ -5,41 +5,18 @@ ion-card {
   border-radius: 12px; 
 }
 
+/* obsah pod obrázkem */
 ion-card-header {
-  padding-top: 0.25rem;
-  padding-bottom: 0.5rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0.5rem;
 }
 
-ion-card-title {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 1.3rem;
-  font-weight: bold;
-  display: -webkit-box;
-  -webkit-line-clamp: 1; 
-  line-clamp: initial;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  white-space: normal;
-}
-
-ion-card-subtitle {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: 1.2rem;
-  display: flex; gap: 0.25rem; align-items: baseline;
-  color: var(--ion-color-warning); 
-}
-
-ion-icon {
-  font-size: 1rem;
-}
-
-
-.filters-wrapper {
-  background-color: var(--ion-color-light); 
+/*  karty mají stejnou výšku */
+ion-col {
+  display: flex;
 }
 
 
@@ -51,16 +28,50 @@ ion-icon {
   border-bottom: 1px solid var(--ion-color-medium-shade);
 }
 
-
-.filter-list {
-  display: flex;
-  flex-wrap: wrap; 
-  gap: 5px;
+ion-card-subtitle.rating-badge {
+  text-transform: none;     
+  margin-bottom: 6px;        
+  padding: 0;
 }
 
+/* Kontejner pro hvězdy a čísla */
+.rating-row {
+  display: flex;
+  align-items: center;
+}
 
-ion-accordion ion-item {
-  --min-height: 48px;
+/* Hodnocení z TMDB  */
+.tmdb-score {
+  margin-left: 4px;
+  margin-right: 10px;      
+   color: var(--ion-color-warning); 
+  font-weight: 600;
   font-size: 0.9rem;
 }
+
+/* Moje hodnocení*/
+.my-rating {
+  color: var(--ion-color-tertiary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+ion-card-title {
+  white-space: normal;       
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ion-text-color);
+  margin-top: 2px;
+}
+
+
+
+
+
+
 
