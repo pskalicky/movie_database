@@ -8,11 +8,12 @@ import { addIcons } from 'ionicons';
 import { ModalController } from '@ionic/angular';
 import { FilterManagerComponent } from '../components/filter-manager/filter-manager.component';
 import { FilterEditorComponent } from '../components/filter-editor/filter-editor.component';
+import { ViewWillEnter } from '@ionic/angular';
 import { StorageService } from '../services/storage';
-import { star, videocam, add, close, options, settings } from 'ionicons/icons';
+import { star, videocam, add, close, options, settings, tv } from 'ionicons/icons';
 
 
-export interface MovieFilter {
+export interface TvFilter {
   id: string;
   label: string;
   isActive: boolean;
@@ -27,12 +28,13 @@ export interface MovieFilter {
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, RouterModule]
 })
-export class Tab4Page implements OnInit {
+export class Tab4Page implements OnInit, ViewWillEnter{
   
-  movies: any[] = [];
+  myRatings: any = {};
+  tvShows: any[] = [];
   imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 
-  filters: MovieFilter[] = [
+  filters: TvFilter[] = [
     { id: 'popular', label: '🔥 Trendy', isActive: true, type: 'predefined' }
   ];
 
@@ -41,7 +43,7 @@ export class Tab4Page implements OnInit {
     private modalCtrl: ModalController,
     private storageService: StorageService
   ) {
-    addIcons({ star, videocam, add, close, options, settings });
+    addIcons({ star, videocam, add, close, options, settings, tv});
   }
 
   async ngOnInit() {
@@ -49,22 +51,29 @@ export class Tab4Page implements OnInit {
     if (savedFilters && Array.isArray(savedFilters) && savedFilters.length > 0) {
       this.filters = savedFilters;
     }
-    this.loadMovies();
+    this.storageService.ratings$.subscribe((ratings) => {
+      this.myRatings = ratings;
+    });
+    this.loadTvShows();
   }
   saveState() {
     this.storageService.saveFilters(this.filters);
   }
-  // -----------------------------------
+  
+  async ionViewWillEnter() {
+    this.myRatings = await this.storageService.getAllRatings();
+    console.log('Moje hodnocení načtena:', this.myRatings);
+  }
 
   get activeFilterLabel(): string {
     const active = this.filters.find(f => f.isActive);
     return active ? active.label : 'Vyberte filtr';
   }
   
-  selectFilter(selectedFilter: MovieFilter) {
+  selectFilter(selectedFilter: TvFilter) {
     this.filters.forEach(f => f.isActive = false);
     selectedFilter.isActive = true;
-    this.loadMovies();
+    this.loadTvShows();
     this.saveState();
   }
 
@@ -78,7 +87,7 @@ export class Tab4Page implements OnInit {
       if (this.filters.length > 0) {
         this.filters[0].isActive = true;
       }
-      this.loadMovies();
+      this.loadTvShows();
     }
     this.saveState();
   }
@@ -122,20 +131,22 @@ export class Tab4Page implements OnInit {
     }
   }
 
-  loadMovies() {
+loadTvShows() {
     const activeFilter = this.filters.find(f => f.isActive);
-    this.movies = [];
+    this.tvShows = [];
 
     if (!activeFilter) return;
 
+    // Logika volání API pro seriály
     if (activeFilter.id === 'popular') {
-      this.movieService.getPopularMovies().subscribe(res => this.movies = res.results);
+      this.movieService.getPopularTvShows().subscribe(res => this.tvShows = res.results);
     } else if (activeFilter.id === 'top_rated') {
-       this.movieService.getTopRatedMovies().subscribe(res => this.movies = res.results);
+       this.movieService.getTopRatedTvShows().subscribe(res => this.tvShows = res.results);
     } else {
       const params = activeFilter.apiParams || {};
-      this.movieService.getMoviesByFilter(params.genre, params.year)
-        .subscribe(res => this.movies = res.results);
+      // Voláme novou metodu pro TV
+      this.movieService.getTvShowsByFilter(params.genre, params.year)
+        .subscribe(res => this.tvShows = res.results);
     }
   }
 }

@@ -22,11 +22,6 @@ export class MovieService {
       `${environment.baseUrl}/movie/popular?api_key=${environment.apiKey}&page=${page}`
     );
   }
-  getPopularTvShows(page = 1) {
-    return this.http.get<ApiResult>(
-      `${environment.baseUrl}/tv/popular?api_key=${environment.apiKey}&page=${page}&language=cs-CZ`
-    );
-  }
 
   getTopRatedMovies(page = 1): Observable<ApiResult> {
     return this.http.get<ApiResult>(
@@ -34,10 +29,41 @@ export class MovieService {
     );
   }
 
+  getPopularTvShows(page = 1) {
+    return this.http.get<ApiResult>(
+      `${environment.baseUrl}/tv/popular?api_key=${environment.apiKey}&page=${page}&language=cs-CZ`
+    );
+  }
+
+  getTopRatedTvShows(page = 1): Observable<ApiResult> {
+    return this.http.get<ApiResult>(
+      `${environment.baseUrl}/tv/top_rated?api_key=${environment.apiKey}&page=${page}&language=cs-CZ`
+    );
+  }
+
+  getTvGenres(): Observable<any> {
+    return this.http.get(
+      `${environment.baseUrl}/genre/tv/list?api_key=${environment.apiKey}&language=cs-CZ`
+    );
+  }
+
   getGenres(): Observable<any> {
     return this.http.get(
       `${environment.baseUrl}/genre/movie/list?api_key=${environment.apiKey}&language=cs-CZ`
     );
+  }
+
+  getTvShowsByFilter(genreId?: number, year?: number, page = 1): Observable<ApiResult> {
+    let url = `${environment.baseUrl}/discover/tv?api_key=${environment.apiKey}&page=${page}&sort_by=popularity.desc&language=cs-CZ&include_null_first_air_dates=false`;
+    
+    if (genreId) {
+      url += `&with_genres=${genreId}`;
+    }
+    if (year) {
+      url += `&first_air_date_year=${year}`;
+    }
+
+    return this.http.get<ApiResult>(url);
   }
 
   getMoviesByFilter(genreId?: number, year?: number, page = 1): Observable<ApiResult> {
