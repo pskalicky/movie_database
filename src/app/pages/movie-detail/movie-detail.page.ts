@@ -45,19 +45,16 @@ export class MovieDetailPage implements OnInit {
   }
 
 
-  async ngOnInit() {
+async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     const type = this.route.snapshot.paramMap.get('type');
-
-    if (id) {
-      this.loadProviders(id);
-    }
 
     if (id) {
        this.loadMyRating(id);
     }
 
     if (id && type) {
+      this.loadProviders(id, type);
       if (type === 'movie') {
         this.movieService.getMovieDetails(id).subscribe(res => {
           this.movie = res;
@@ -67,6 +64,7 @@ export class MovieDetailPage implements OnInit {
           this.movie = res;
           this.movie.title = res.name; 
           this.movie.release_date = res.first_air_date;
+          
           if (res.episode_run_time && res.episode_run_time.length > 0) {
             this.movie.runtime = res.episode_run_time[0];
           } else {
@@ -77,14 +75,24 @@ export class MovieDetailPage implements OnInit {
     }
   }
 
-  loadProviders(id: string) {
-    this.movieService.getMovieProviders(id).subscribe(res => {
+loadProviders(id: string, type: string) {
+    let apiCall;
+    if (type === 'tv') {
+      apiCall = this.movieService.getTvProviders(id);
+    } else {
+      apiCall = this.movieService.getMovieProviders(id);
+    }
+
+    apiCall.subscribe(res => {
       const czData = res.results['CZ'];
       if (czData && czData.flatrate) {
         this.streamProviders = czData.flatrate;
       } else {
         this.streamProviders = [];
       }
+    }, (error) => {
+      console.log('Chyba při načítání providerů:', error);
+      this.streamProviders = [];
     });
   }
 
