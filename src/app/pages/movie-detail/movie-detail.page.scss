@@ -1,4 +1,4 @@
-/* 1. Průhledný Header */
+
 ion-toolbar {
   --background: transparent;
   --border-color: transparent;
@@ -6,155 +6,299 @@ ion-toolbar {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 10;
+  z-index: 100;
+  padding-top: var(--ion-safe-area-top);
 }
 
-/* 2. Plakát na pozadí (fixní pozice pro parallax efekt) */
+.back-button {
+  --background: rgba(255, 255, 255, 0.2);
+  --color: white;
+  --border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  ion-icon { font-size: 24px; }
+}
+
 .poster-container {
   width: 100%;
-  height: 55vh; 
-  position: fixed; /* Důležité: fixed, aby se obsah scrolloval přes něj */
+  height: 60vh; 
+  position: fixed;
   top: 0;
+  left: 0;
   z-index: 0;
+  pointer-events: none; 
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center top; 
+    object-position: center top;
   }
 
-  /* Ztmavovací vrstva přes plakát */
-  &::after {
+  .gradient-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 60%, var(--ion-background-color) 95%);
+  }
+}
+
+.content-wrapper {
+  position: relative;
+  z-index: 10;
+  margin-top: 50vh;
+  border-radius: 24px 24px 0 0;
+  background: var(--ion-background-color);
+  padding: 24px 20px;
+  min-height: 100vh;
+  box-shadow: 0px -10px 30px rgba(0,0,0,0.15);
+  
+  &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3); /* Trochu jsem ztmavil pro lepší čitelnost ikon */
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 24px 24px 0 0;
   }
 }
 
-/* 3. Hlavní obsahová karta (vyjíždí přes plakát) */
-.content-wrapper {
-  position: relative; 
-  z-index: 5; /* Musí být vyšší než plakát */
-  
-  margin-top: 50vh; /* Posun dolů, aby byl vidět plakát */
-  border-radius: 30px 30px 0 0; /* Zaoblení horních rohů */
-  background: var(--ion-background-color); 
-  
-  padding: 24px;
-  padding-bottom: 80px; 
-  min-height: 100vh; /* Aby to pokrylo celou obrazovku při scrollu */
-  box-shadow: 0px -5px 20px rgba(0,0,0,0.1); 
+.sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--ion-color-step-200, #e0e0e0);
+    border-radius: 2px;
+    margin: -10px auto 20px auto; 
+    opacity: 0.5;
 }
 
-/* 4. Typografie a informace o filmu */
 .movie-title {
-  font-size: 2rem;
+  font-size: 28px;
   font-weight: 800;
-  margin-top: 0;
-  margin-bottom: 10px;
-  line-height: 1.1;
-}
-
-.tagline {
-  font-style: italic;
-  color: var(--ion-color-medium);
-  margin-bottom: 20px;
-  border-left: 3px solid var(--ion-color-primary);
-  padding-left: 10px;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
 .meta-tags {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 16px;
   flex-wrap: wrap;
+  align-items: center;
+
+  .custom-chip {
+    margin: 0;
+    height: 28px;
+    font-size: 12px;
+    font-weight: 500;
+    --background: var(--ion-color-step-100);
+    --color: var(--ion-color-step-800);
+    
+    ion-icon { font-size: 14px; margin-right: 4px; }
+  }
+  
+  .rating-chip {
+    --background: rgba(var(--ion-color-warning-rgb), 0.15);
+    --color: var(--ion-color-warning);
+    font-weight: 700;
+  }
+}
+
+.genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+
+    .genre-tag {
+        font-size: 12px;
+        color: var(--ion-color-medium);
+        border: 1px solid var(--ion-color-step-200);
+        padding: 4px 10px;
+        border-radius: 100px;
+    }
+}
+
+.tagline {
+  font-style: italic;
+  font-size: 15px;
+  color: var(--ion-color-medium);
+  margin-bottom: 24px;
+  border-left: 3px solid var(--ion-color-primary);
+  padding-left: 12px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 5px;
+  color: var(--ion-text-color);
+  
+  &.text-center { text-align: center; }
 }
 
 .overview {
   line-height: 1.6;
-  color: var(--ion-color-step-600);
-  font-size: 1rem;
-  margin-bottom: 30px;
+  color: var(--ion-color-step-700);
+  font-size: 15px;
+  margin-bottom: 24px;
 }
 
-/* 5. Sekce Hodnocení */
+.providers-section {
+  background-color: var(--ion-color-step-50);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 20px 0;
+  border: 1px solid var(--ion-color-step-100);
+
+  .section-title { margin-top: 0; font-size: 16px; }
+}
+
+.providers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+  gap: 16px;
+  justify-items: center;
+}
+
+.provider-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+  .provider-logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 8px;
+      transition: transform 0.2s;
+      
+      img { width: 100%; height: 100%; object-fit: cover; }
+  }
+
+  .provider-name {
+    font-size: 10px;
+    line-height: 1.2;
+    color: var(--ion-color-medium);
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 .rating-section {
   background: var(--ion-color-light);
-  padding: 15px;
-  border-radius: 16px;
+  padding: 10px;
+  border-radius: 20px;
   text-align: center;
-  margin: 20px 0;
+  margin: 10px 0;
 }
 
 .stars {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 5px;
+  margin: 10px 0;
+  
+  ion-icon {
+    font-size: 32px;
+    color: var(--ion-color-medium);
+    transition: transform 0.2s, color 0.2s;
+    
+    &.active {
+      color: var(--ion-color-warning);
+      transform: scale(1.1);
+    }
+    
+    &:active { transform: scale(0.9); }
+  }
 }
 
-/* 6. Společné styly pro nadpisy sekcí */
-.section-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 15px;
-  margin-top: 30px;
-  display: block;
+.rating-text {
+    font-weight: 600;
+    color: var(--ion-color-step-700);
+    margin: 0;
+    font-size: 14px;
 }
 
-/* 7. Sekce HERCI (Cast) */
+.divider {
+    background: var(--ion-color-step-100);
+    height: 1px;
+    border: none;
+    margin: 24px 0;
+}
+
 .cast-scroller {
   display: flex;
   overflow-x: auto;
   gap: 16px;
-  padding: 10px 0 20px 0;
-  scrollbar-width: none; /* Firefox */
-  &::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+  padding: 5px 5px 20px 5px;
+  
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 0;
+  
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
 }
 
 .cast-card {
-  flex: 0 0 auto; 
-  width: 80px;
+  flex: 0 0 90px;
   text-align: center;
+  scroll-snap-align: start;
 
   .actor-img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: var(--ion-color-light);
+    background: var(--ion-color-step-100);
     overflow: hidden;
-    margin-bottom: 8px;
+    margin: 0 auto 10px auto;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
     
     img { width: 100%; height: 100%; object-fit: cover; }
     
-    .no-photo { 
-      line-height: 80px; 
-      font-size: 1.5rem; 
-      color: var(--ion-color-medium); 
+    .no-photo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--ion-color-medium);
+        font-size: 30px;
     }
   }
 
   .actor-name {
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin: 0;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0 0 2px 0;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
   }
   
   .character-name {
-    font-size: 0.65rem;
+    font-size: 11px;
     color: var(--ion-color-medium);
     margin: 0;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
   }
-} 
+}
+
+.bottom-spacer {
+    height: 50px; 
+}

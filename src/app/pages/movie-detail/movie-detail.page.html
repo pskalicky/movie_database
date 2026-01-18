@@ -1,99 +1,112 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-button (click)="goBack()" color="light">
+    <ion-button (click)="goBack()" slot="start" class="back-button">
       <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
     </ion-button>
   </ion-toolbar>
 </ion-header>
-<ion-content [fullscreen]="true">
-  
+
+<ion-content [fullscreen]="true" scroll-y="true">
+
   <div *ngIf="!movie" class="ion-text-center ion-padding top-spacing">
-    <ion-spinner></ion-spinner>
+    <ion-spinner color="primary"></ion-spinner>
   </div>
 
   <div *ngIf="movie">
     
     <div class="poster-container">
-      <img [src]="imageBaseUrl + movie.poster_path" alt="Poster">
+      <img [src]="imageBaseUrl + movie.poster_path" alt="Poster" loading="lazy">
       <div class="gradient-overlay"></div>
     </div>
 
-    <div class="ion-padding content-wrapper">
+    <div class="content-wrapper">
       
+      <div class="sheet-handle"></div>
+
       <h1 class="movie-title">{{ movie.title }}</h1>
 
       <div class="meta-tags">
-        <ion-chip color="primary" mode="ios" outline="true">
+        <ion-chip class="custom-chip" *ngIf="movie.release_date">
           <ion-icon name="calendar"></ion-icon>
           <ion-label>{{ movie.release_date | date:'d. M. yyyy' }}</ion-label>
         </ion-chip>
 
-        <ion-chip color="warning" mode="ios" outline="true" *ngIf="movie.runtime > 0">
+        <ion-chip class="custom-chip" *ngIf="movie.runtime > 0">
           <ion-icon name="time"></ion-icon>
           <ion-label>
             {{ movie.runtime }} min
             <span *ngIf="movie.number_of_episodes"> / ep.</span>
           </ion-label>
         </ion-chip>
-        <ion-chip color="secondary" mode="ios" outline="true" *ngIf="movie.number_of_seasons">
-          <ion-icon name="albums"></ion-icon> <ion-label>
-            {{ movie.number_of_seasons }} Série | {{ movie.number_of_episodes }} Ep.
-          </ion-label>
+
+        <ion-chip class="custom-chip" *ngIf="movie.number_of_seasons">
+          <ion-icon name="albums"></ion-icon>
+          <ion-label>{{ movie.number_of_seasons }} Série</ion-label>
         </ion-chip>
-      </div> <p class="tagline" *ngIf="movie.tagline">"{{ movie.tagline }}"</p>
+
+        <ion-chip class="custom-chip rating-chip" *ngIf="movie.vote_average">
+            <ion-icon name="star" color="warning"></ion-icon>
+            <ion-label>{{ movie.vote_average | number:'1.1-1' }}</ion-label>
+        </ion-chip>
+      </div>
+
+      <div class="genres" *ngIf="movie.genres?.length > 0">
+        <span *ngFor="let genre of movie.genres" class="genre-tag">
+          {{ genre.name }}
+        </span>
+      </div>
+
+      <p class="tagline" *ngIf="movie.tagline">"{{ movie.tagline }}"</p>
       
       <div class="providers-section" *ngIf="streamProviders.length > 0">
         <h3 class="section-title">Kde sledovat online</h3>
-      <div class="providers-list">
-      <div *ngFor="let provider of streamProviders" class="provider-item">
-        <div class="provider-logo">
-          <img [src]="'https://image.tmdb.org/t/p/original' + provider.logo_path" [alt]="provider.provider_name">
+        <div class="providers-grid">
+          <div *ngFor="let provider of streamProviders" class="provider-item">
+            <div class="provider-logo">
+                <img [src]="'https://image.tmdb.org/t/p/original' + provider.logo_path" 
+                     [alt]="provider.provider_name" 
+                     loading="lazy" />
+            </div>
+            <span class="provider-name">{{ provider.provider_name }}</span>
+          </div>
         </div>
-        <span class="provider-name">{{ provider.provider_name }}</span>
       </div>
-    </div>
-    
-    <p class="attribution">Powered by JustWatch</p>
-  </div>
-
 
       <div class="rating-section">
-        <h3>Tvé hodnocení</h3>
+        <h3 class="section-title text-center">Tvé hodnocení</h3>
         <div class="stars">
           <ion-icon 
             *ngFor="let star of stars" 
             [name]="star <= myRating ? 'star' : 'star-outline'" 
-            [color]="star <= myRating ? 'warning' : 'medium'"
-            size="large"
+            [class.active]="star <= myRating"
             (click)="rateMovie(star)"
           ></ion-icon>
         </div>
-        <p class="rating-text" *ngIf="myRating > 0">Dal jsi {{ myRating }}/5 hvězd!</p>
+        <p class="rating-text" *ngIf="myRating > 0">Hodnotil jsi {{ myRating }}/5</p>
       </div>
 
       <hr class="divider">
 
-      <h3>Příběh</h3>
+      <h3 class="section-title">Příběh</h3>
       <p class="overview">{{ movie.overview }}</p>
 
-      <h3 *ngIf="movie.credits?.cast?.length > 0">Hrají</h3>
-      
-      <div class="cast-scroller">
-        <div class="cast-card" *ngFor="let actor of movie.credits.cast | slice:0:10">
-          <div class="actor-img">
-             <img *ngIf="$any(actor).profile_path" [src]="imageBaseUrl + $any(actor).profile_path">
-             <div *ngIf="!$any(actor).profile_path" class="no-photo">?</div>
+      <div *ngIf="movie.credits?.cast?.length > 0">
+        <h3 class="section-title">Hrají</h3>
+        <div class="cast-scroller">
+          <div class="cast-card" *ngFor="let actor of movie.credits.cast | slice:0:15">
+            <div class="actor-img">
+               <img *ngIf="$any(actor).profile_path" [src]="imageBaseUrl + $any(actor).profile_path" loading="lazy">
+               <div *ngIf="!$any(actor).profile_path" class="no-photo">
+                 <ion-icon name="person"></ion-icon>
+               </div>
+            </div>
+            <p class="actor-name">{{ $any(actor).name }}</p>
+            <p class="character-name">{{ $any(actor).character }}</p>
           </div>
-          <p class="actor-name">{{ $any(actor).name }}</p>
-          <p class="character-name">{{ $any(actor).character }}</p>
         </div>
       </div>
 
-      <div class="genres">
-        <ion-badge *ngFor="let genre of movie.genres" color="light">
-          {{ genre.name }}
-        </ion-badge>
-      </div>
+      <div class="bottom-spacer"></div>
       
     </div>
   </div>
